@@ -1,0 +1,13 @@
+diff --git a/libavformat/mxfdec.c b/libavformat/mxfdec.c
+index 32c2464fb1..9afcdba8a5 100644
+--- a/libavformat/mxfdec.c
++++ b/libavformat/mxfdec.c
+@@ -59,7 +59,7 @@
+ #include "internal.h"
+ #include "mxf.h"
+ 
+-#define MXF_MAX_CHUNK_SIZE (32 << 20)
++#define MXF_MAX_CHUNK_SIZE (32 << 22)
+ #define RUN_IN_MAX (65535+1)  // S377m-2004 section 5.5 and S377-1-2009 section 6.5, the +1 is to be slightly more tolerant
+ 
+ typedef enum {
