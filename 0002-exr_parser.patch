@@ -1,0 +1,24 @@
+diff --git a/libavcodec/Makefile b/libavcodec/Makefile
+index 389253f5d0..f9ed50e650 100644
+--- a/libavcodec/Makefile
++++ b/libavcodec/Makefile
+@@ -1157,6 +1157,7 @@ OBJS-$(CONFIG_DVAUDIO_PARSER)          += dvaudio_parser.o
+ OBJS-$(CONFIG_DVBSUB_PARSER)           += dvbsub_parser.o
+ OBJS-$(CONFIG_DVD_NAV_PARSER)          += dvd_nav_parser.o
+ OBJS-$(CONFIG_DVDSUB_PARSER)           += dvdsub_parser.o
++OBJS-$(CONFIG_EXR_PARSER)              += exr_parser.o
+ OBJS-$(CONFIG_FLAC_PARSER)             += flac_parser.o flacdata.o flac.o
+ OBJS-$(CONFIG_FTR_PARSER)              += ftr_parser.o
+ OBJS-$(CONFIG_G723_1_PARSER)           += g723_1_parser.o
+diff --git a/libavcodec/parsers.c b/libavcodec/parsers.c
+index d355808018..f8f26348c1 100644
+--- a/libavcodec/parsers.c
++++ b/libavcodec/parsers.c
+@@ -41,6 +41,7 @@ extern const AVCodecParser ff_dvaudio_parser;
+ extern const AVCodecParser ff_dvbsub_parser;
+ extern const AVCodecParser ff_dvdsub_parser;
+ extern const AVCodecParser ff_dvd_nav_parser;
++extern const AVCodecParser ff_exr_parser;
+ extern const AVCodecParser ff_flac_parser;
+ extern const AVCodecParser ff_ftr_parser;
+ extern const AVCodecParser ff_g723_1_parser;
