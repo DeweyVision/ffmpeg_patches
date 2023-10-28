@@ -12,11 +12,11 @@ index 389253f5d0..f9ed50e650 100644
  OBJS-$(CONFIG_G723_1_PARSER)           += g723_1_parser.o
 diff --git a/libavcodec/exr_parser.c b/libavcodec/exr_parser.c
 new file mode 100644
-index 0000000000..76f8557b26
+index 0000000000..81ee17a6aa
 --- /dev/null
 +++ b/libavcodec/exr_parser.c
 @@ -0,0 +1,217 @@
-++/*
++/*
 + * EXR parser
 + * Copyright (c) 2020 Paul B Mahol
 + *
