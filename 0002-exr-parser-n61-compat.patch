@@ -1,3 +1,15 @@
+From 240770ea772c9ed572e17038e8def756c24a251b Mon Sep 17 00:00:00 2001
+From: Taylor Cox <taylor@deweyvision.ai>
+Date: Fri, 22 Dec 2023 11:56:43 -0600
+Subject: [PATCH] EXR parser changes
+
+---
+ libavcodec/Makefile     |   1 +
+ libavcodec/exr_parser.c | 217 ++++++++++++++++++++++++++++++++++++++++
+ libavcodec/parsers.c    |   1 +
+ 3 files changed, 219 insertions(+)
+ create mode 100644 libavcodec/exr_parser.c
+
 diff --git a/libavcodec/Makefile b/libavcodec/Makefile
 index 580a8d6b54..c9c8ffe436 100644
 --- a/libavcodec/Makefile
@@ -245,3 +257,6 @@ index 5128009cd4..87f032e5da 100644
  extern const AVCodecParser ff_flac_parser;
  extern const AVCodecParser ff_ftr_parser;
  extern const AVCodecParser ff_g723_1_parser;
+-- 
+2.34.1
+
