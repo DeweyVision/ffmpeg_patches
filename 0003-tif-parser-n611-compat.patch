@@ -1,0 +1,97 @@
+diff --git a/libavcodec/Makefile b/libavcodec/Makefile
+index ec57e53e30..0085f00878 100644
+--- a/libavcodec/Makefile
++++ b/libavcodec/Makefile
+@@ -1205,6 +1205,7 @@ OBJS-$(CONFIG_RV34_PARSER)             += rv34_parser.o
+ OBJS-$(CONFIG_SBC_PARSER)              += sbc_parser.o
+ OBJS-$(CONFIG_SIPR_PARSER)             += sipr_parser.o
+ OBJS-$(CONFIG_TAK_PARSER)              += tak_parser.o tak.o
++OBJS-$(CONFIG_TIF_PARSER)              += tif_parser.o
+ OBJS-$(CONFIG_VC1_PARSER)              += vc1_parser.o vc1.o vc1data.o  \
+                                           wmv2data.o
+ OBJS-$(CONFIG_VP3_PARSER)              += vp3_parser.o
+diff --git a/libavcodec/parsers.c b/libavcodec/parsers.c
+index 5128009cd4..0d639c7bf2 100644
+--- a/libavcodec/parsers.c
++++ b/libavcodec/parsers.c
+@@ -70,6 +70,7 @@ extern const AVCodecParser ff_rv34_parser;
+ extern const AVCodecParser ff_sbc_parser;
+ extern const AVCodecParser ff_sipr_parser;
+ extern const AVCodecParser ff_tak_parser;
++extern const AVCodecParser ff_tif_parser;
+ extern const AVCodecParser ff_vc1_parser;
+ extern const AVCodecParser ff_vorbis_parser;
+ extern const AVCodecParser ff_vp3_parser;
+diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
+new file mode 100644
+index 0000000000..a0924864e2
+--- /dev/null
++++ b/libavcodec/tif_parser.c
+@@ -0,0 +1,67 @@
++/*
++ * TIFF parser derived from dpx parser
++ * Modified from Copyright (c) 2013 Paul B Mahol
++ * Copyright (c) 2024 DeweyVision Corp.
++ *
++ * This file is part of FFmpeg.
++ *
++ * FFmpeg is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public
++ * License as published by the Free Software Foundation; either
++ * version 2.1 of the License, or (at your option) any later version.
++ *
++ * FFmpeg is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with FFmpeg; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++/**
++ * @file
++ * TIFF parser
++ */
++
++#include "libavutil/bswap.h"
++#include "libavutil/common.h"
++
++#include "parser.h"
++
++typedef struct TIFFParseContext {
++    ParseContext pc;
++} TIFFParseContext;
++
++static int tiff_parse(AVCodecParserContext *s, AVCodecContext *avctx,
++                     const uint8_t **poutbuf, int *poutbuf_size,
++                     const uint8_t *buf, int buf_size)
++{
++    TIFFParseContext *d = s->priv_data;
++    uint32_t state = d->pc.state;
++    int next = END_NOT_FOUND;
++
++    s->pict_type = AV_PICTURE_TYPE_I;
++    *poutbuf_size = 0;
++
++    if (buf_size == 0) {
++        next = 0;
++    }
++
++    if (s->flags & PARSER_FLAG_COMPLETE_FRAMES) {
++        next = buf_size;
++    }
++
++    *poutbuf      = buf;
++    *poutbuf_size = buf_size;
++
++    return next;
++}
++
++const AVCodecParser ff_tiff_parser = {
++    .codec_ids      = { AV_CODEC_ID_TIFF },
++    .priv_data_size = sizeof(TIFFParseContext),
++    .parser_parse   = tiff_parse,
++    .parser_close   = ff_parse_close,
++};
