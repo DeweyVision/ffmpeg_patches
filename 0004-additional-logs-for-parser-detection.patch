@@ -1,0 +1,20 @@
+diff --git a/libavformat/demux.c b/libavformat/demux.c
+index 6f640b92b1..e0af72928d 100644
+--- a/libavformat/demux.c
++++ b/libavformat/demux.c
+@@ -1331,6 +1331,7 @@ static int read_frame_internal(AVFormatContext *s, AVPacket *pkt)
+                 av_log(s, AV_LOG_VERBOSE, "parser not found for codec "
+                        "%s, packets or times may be invalid.\n",
+                        avcodec_get_name(st->codecpar->codec_id));
++                av_log(s, AV_LOG_DEBUG, "DeweyVision: missing parser warning fired in packet search loop.\n");
+                 /* no parser available: just output the raw packets */
+                 sti->need_parsing = AVSTREAM_PARSE_NONE;
+             } else if (sti->need_parsing == AVSTREAM_PARSE_HEADERS)
+@@ -2493,6 +2494,7 @@ int avformat_find_stream_info(AVFormatContext *ic, AVDictionary **options)
+                 av_log(ic, AV_LOG_VERBOSE, "parser not found for codec "
+                        "%s, packets or times may be invalid.\n",
+                        avcodec_get_name(st->codecpar->codec_id));
++                av_log(ic, AV_LOG_DEBUG, "DeweyVision: missing parser warning fired in codec stream scan loop.\n");
+             }
+         }
+ 
