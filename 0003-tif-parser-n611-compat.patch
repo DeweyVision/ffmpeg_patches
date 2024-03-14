@@ -24,10 +24,10 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..b165871b89
+index 0000000000..c82505dde8
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,83 @@
 +/*
 + * TIFF parser derived from dpx parser
 + * Modified from Copyright (c) 2013 Paul B Mahol
@@ -84,6 +84,12 @@ index 0000000000..b165871b89
 +    av_log(NULL, AV_LOG_DEBUG, "DeweyVision: tiff_parse: state = %d\n", state);
 +    av_log(NULL, AV_LOG_DEBUG, "DeweyVision: tiff_parse: buf_size = %d\n", buf_size);
 +    av_log(NULL, AV_LOG_DEBUG, "DeweyVision: tiff_parse: flags = %d\n", s->flags);
++
++    if (s->flags & PARSER_FLAG_FETCHED_OFFSET) {
++        av_log(NULL, AV_LOG_DEBUG, "DeweyVision: tiff_parse: PARSER_FLAG_FETCHED_OFFSET\n");
++        s->flags &= ~PARSER_FLAG_FETCHED_OFFSET;
++        next = buf_size;
++    }
 +
 +    if (s->flags & PARSER_FLAG_COMPLETE_FRAMES) {
 +        av_log(NULL, AV_LOG_DEBUG, "DeweyVision: tiff_parse: PARSER_FLAG_COMPLETE_FRAMES\n");
