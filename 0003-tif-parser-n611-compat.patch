@@ -24,7 +24,7 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..a0924864e2
+index 0000000000..c5950c01da
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
 @@ -0,0 +1,67 @@
@@ -89,7 +89,7 @@ index 0000000000..a0924864e2
 +    return next;
 +}
 +
-+const AVCodecParser ff_tiff_parser = {
++const AVCodecParser ff_tif_parser = {
 +    .codec_ids      = { AV_CODEC_ID_TIFF },
 +    .priv_data_size = sizeof(TIFFParseContext),
 +    .parser_parse   = tiff_parse,
