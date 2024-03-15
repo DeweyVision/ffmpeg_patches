@@ -24,7 +24,7 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..e34051a33f
+index 0000000000..7e3cf7325e
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
 @@ -0,0 +1,82 @@
@@ -98,10 +98,10 @@ index 0000000000..e34051a33f
 +
 +    // Set parser output parameters
 +    *poutbuf = buf;
-+    *poutbuf_size = buf_size;
++    *poutbuf_size = TIFF_HEADER_SIZE; // Return size of the TIFF header
 +
 +    // Return the size of the input buffer as consumed data
-+    return buf_size;
++    return TIFF_HEADER_SIZE;
 +}
 +
 +const AVCodecParser ff_tif_parser = {
