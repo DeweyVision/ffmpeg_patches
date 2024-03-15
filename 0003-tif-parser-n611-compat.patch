@@ -24,10 +24,10 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..62c4f14d88
+index 0000000000..94f7b38c3b
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
-@@ -0,0 +1,102 @@
+@@ -0,0 +1,98 @@
 +/*
 + * TIFF parser derived from dpx parser
 + * Modified from Copyright (c) 2013 Paul B Mahol
@@ -76,14 +76,12 @@ index 0000000000..62c4f14d88
 +    uint16_t tiffMarker;
 +    uint32_t ifdOffset;
 +
-+    av_log(NULL, AV_LOG_INFO, "DeweyVision: the tiff parser is running\n");
-+
 +    // Check for the TIFF header
 +    if (buf_size < 8) {
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: buf_size < 8.\n");
++        av_log(avctx, AV_LOG_ERROR, "DeweyVision: Input buffer too small.\n");
 +        *poutbuf = NULL;
 +        *poutbuf_size = 0;
-+        return 0;
++        return buf_size;
 +    }
 +
 +    byteOrder = AV_RB16(ptr);
@@ -91,18 +89,18 @@ index 0000000000..62c4f14d88
 +
 +    if (byteOrder != 0x4949 && byteOrder != 0x4D4D) {
 +        // Invalid byte order
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: Invalid byte order.\n");
++        av_log(avctx, AV_LOG_ERROR, "DeweyVision: Invalid byte order.\n");
 +        *poutbuf = NULL;
 +        *poutbuf_size = 0;
-+        return 0;
++        return buf_size;
 +    }
 +
 +    if (tiffMarker != 0x002A) {
 +        // Invalid TIFF marker
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: Invalid TIFF marker.\n");
++        av_log(avctx, AV_LOG_ERROR, "DeweyVision: Invalid TIFF marker.\n");
 +        *poutbuf = NULL;
 +        *poutbuf_size = 0;
-+        return 0;
++        return buf_size;
 +    }
 +
 +    // Read the offset to the Image File Directory (IFD)
@@ -110,18 +108,16 @@ index 0000000000..62c4f14d88
 +
 +    // Check if the IFD offset is within the buffer
 +    if (ifdOffset >= buf_size - 8) {
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: IFD offset is within the buffer.\n");
++        av_log(avctx, AV_LOG_ERROR, "DeweyVision: IFD offset is out of bounds.\n");
 +        *poutbuf = NULL;
 +        *poutbuf_size = 0;
-+        return 0;
++        return buf_size;
 +    }
-+
-+    av_log(NULL, AV_LOG_INFO, "DeweyVision: the tiff parser is setting output ptrs and returning 0\n");
 +
 +    *poutbuf = buf + ifdOffset;
 +    *poutbuf_size = buf_size - ifdOffset;
 +
-+    return 0;
++    return 8; // Return the number of bytes consumed (TIFF header)
 +}
 +
 +const AVCodecParser ff_tif_parser = {
