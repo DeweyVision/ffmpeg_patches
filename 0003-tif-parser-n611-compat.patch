@@ -24,7 +24,7 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..0aa6d91a75
+index 0000000000..a967ab6c71
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
 @@ -0,0 +1,69 @@
@@ -77,11 +77,11 @@ index 0000000000..0aa6d91a75
 +        return buf_size;
 +    }
 +
-+    // Check if the input buffer starts with the TIFF marker
-+    if (AV_RB16(buf + 2) != 0x002A) {
-+        av_log(avctx, AV_LOG_ERROR, "Invalid TIFF marker.\n");
-+        return buf_size;
-+    }
++    // // Check if the input buffer starts with the TIFF marker
++    // if (AV_RB16(buf + 2) != 0x002A) {
++    //     av_log(avctx, AV_LOG_ERROR, "Invalid TIFF marker.\n");
++    //     return buf_size;
++    // }
 +
 +    // Set the output buffer and size to the entire input buffer
 +    *poutbuf = buf;
