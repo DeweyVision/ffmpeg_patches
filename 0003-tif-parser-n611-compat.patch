@@ -24,7 +24,7 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..c70481b505
+index 0000000000..7cda801360
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
 @@ -0,0 +1,93 @@
@@ -57,6 +57,7 @@ index 0000000000..c70481b505
 +
 +#include "libavutil/bswap.h"
 +#include "libavutil/common.h"
++#include <libavutil/intreadwrite.h>
 +
 +#include "parser.h"
 +
@@ -71,7 +72,6 @@ index 0000000000..c70481b505
 +                     const uint8_t *buf, int buf_size)
 +{
 +    const uint8_t *ptr = buf;
-+    const uint8_t *buf_end = buf + buf_size;
 +    uint16_t byteOrder;
 +    uint16_t tiffMarker;
 +    uint32_t ifdOffset;
