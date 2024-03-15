@@ -24,10 +24,10 @@ index 5128009cd4..0d639c7bf2 100644
  extern const AVCodecParser ff_vp3_parser;
 diff --git a/libavcodec/tif_parser.c b/libavcodec/tif_parser.c
 new file mode 100644
-index 0000000000..7e3cf7325e
+index 0000000000..c70481b505
 --- /dev/null
 +++ b/libavcodec/tif_parser.c
-@@ -0,0 +1,82 @@
+@@ -0,0 +1,93 @@
 +/*
 + * TIFF parser derived from dpx parser
 + * Modified from Copyright (c) 2013 Paul B Mahol
@@ -70,38 +70,49 @@ index 0000000000..7e3cf7325e
 +                     const uint8_t **poutbuf, int *poutbuf_size,
 +                     const uint8_t *buf, int buf_size)
 +{
-+    av_log(NULL, AV_LOG_INFO, "DeweyVision: tiff_parse was invoked\n");
++    const uint8_t *ptr = buf;
++    const uint8_t *buf_end = buf + buf_size;
++    uint16_t byteOrder;
++    uint16_t tiffMarker;
++    uint32_t ifdOffset;
 +
-+    // Check if the input buffer is large enough to contain TIFF header
-+    if (buf_size < TIFF_HEADER_SIZE) {
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: buff size less than header size\n");
-+        return 0;
-+    }
++    // Check for the TIFF header
++    av_log(NULL, AV_LOG_INFO, "DeweyVision: the tiff parser is running\n");
 +
-+    // Check if the input buffer starts with the TIFF magic number (II or MM)
-+    if (!(buf[0] == 'I' && buf[1] == 'I') && !(buf[0] == 'M' && buf[1] == 'M')) {
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: no tiff magic number found\n");
++    if (buf_size < 8) {
++        av_log(NULL, AV_LOG_INFO, "DeweyVision: buf_size < 8. the tiff parser is returning AVERROR_INVALIDDATA\n");
 +        return AVERROR_INVALIDDATA;
 +    }
 +
-+    // Extract TIFF image width and height from the header
-+    uint16_t width = (buf[2] << 8) | buf[3];
-+    uint16_t height = (buf[4] << 8) | buf[5];
++    byteOrder = AV_RB16(ptr);
++    tiffMarker = AV_RB16(ptr + 2);
 +
-+    // Validate width and height
-+    if (width == 0 || height == 0) {
-+        av_log(NULL, AV_LOG_INFO, "DeweyVision: missing h/w. width is: %d, height is: %d\n", width, height);
++    if (byteOrder != 0x4949 && byteOrder != 0x4D4D) {
++        // Invalid byte order
++        av_log(NULL, AV_LOG_INFO, "DeweyVision: Invalid byte order. the tiff parser is returning AVERROR_INVALIDDATA\n");
 +        return AVERROR_INVALIDDATA;
 +    }
 +
-+    av_log(NULL, AV_LOG_INFO, "DeweyVision: setting out values and returning.\n");
++    if (tiffMarker != 0x002A) {
++        // Invalid TIFF marker
++        av_log(NULL, AV_LOG_INFO, "DeweyVision: Invalid TIFF marker. the tiff parser is returning AVERROR_INVALIDDATA\n");
++        return AVERROR_INVALIDDATA;
++    }
 +
-+    // Set parser output parameters
-+    *poutbuf = buf;
-+    *poutbuf_size = TIFF_HEADER_SIZE; // Return size of the TIFF header
++    // Read the offset to the Image File Directory (IFD)
++    ifdOffset = AV_RB32(ptr + 4);
 +
-+    // Return the size of the input buffer as consumed data
-+    return TIFF_HEADER_SIZE;
++    // Check if the IFD offset is within the buffer
++    if (ifdOffset >= buf_size - 8) {
++        av_log(NULL, AV_LOG_INFO, "DeweyVision: IFD offset is within the buffer. the tiff parser is returning AVERROR_INVALIDDATA\n");
++        return AVERROR_INVALIDDATA;
++    }
++
++    av_log(NULL, AV_LOG_INFO, "DeweyVision: the tiff parser is setting output ptrs and returning 0\n");
++    *poutbuf = buf + ifdOffset;
++    *poutbuf_size = buf_size - ifdOffset;
++
++    return 0;
 +}
 +
 +const AVCodecParser ff_tif_parser = {
