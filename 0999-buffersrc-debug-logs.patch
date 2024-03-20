@@ -1,0 +1,28 @@
+diff --git a/libavfilter/buffersrc.c b/libavfilter/buffersrc.c
+index 453fc0fd5c..7316cc5d97 100644
+--- a/libavfilter/buffersrc.c
++++ b/libavfilter/buffersrc.c
+@@ -96,12 +96,15 @@ int av_buffersrc_parameters_set(AVFilterContext *ctx, AVBufferSrcParameters *par
+ {
+     BufferSourceContext *s = ctx->priv;
+ 
++    av_log(NULL, AV_LOG_DEBUG, "DeweyVision: invoked av_buffersrc_parameters_set.\n");
++
+     if (param->time_base.num > 0 && param->time_base.den > 0)
+         s->time_base = param->time_base;
+ 
+     switch (ctx->filter->outputs[0].type) {
+     case AVMEDIA_TYPE_VIDEO:
+         if (param->format != AV_PIX_FMT_NONE) {
++            av_log(NULL, AV_LOG_DEBUG, "DeweyVision: setting pixel format to: %d\n", param->format);
+             s->pix_fmt = param->format;
+         }
+         if (param->width > 0)
+@@ -291,6 +294,7 @@ static av_cold int init_video(AVFilterContext *ctx)
+ 
+     if (c->pix_fmt == AV_PIX_FMT_NONE) {
+         av_log(ctx, AV_LOG_ERROR, "Unspecified pixel format\n");
++        av_log(ctx, AV_LOG_ERROR, "DeweyVision: Unspecified pixel format\n");
+         return AVERROR(EINVAL);
+     }
+     if (c->w <= 0 || c->h <= 0) {
